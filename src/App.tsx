@@ -1,7 +1,19 @@
 import React from 'react';
+import styled from 'styled-components';
+import Hero from './components/Hero';
+
+const AppContainer = styled.div`
+    padding: 18px;
+    margin: 0 auto;
+    max-width: 1266px;
+`;
 
 function App() {
-    return <div></div>;
+    return (
+        <AppContainer>
+            <Hero />
+        </AppContainer>
+    );
 }
 
 export default App;
