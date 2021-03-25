@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Hero from './components/Hero';
+import MostSearched from './components/MostSearched';
 
 const AppContainer = styled.div`
     padding: 18px;
@@ -12,6 +13,7 @@ function App() {
     return (
         <AppContainer>
             <Hero />
+            <MostSearched />
         </AppContainer>
     );
 }
