@@ -2,8 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import Hero from './components/Hero';
 import MostSearched from './components/MostSearched';
+import Info from './components/Info';
 
-const AppContainer = styled.div`
+const AppShell = styled.div`
     padding: 18px;
     margin: 0 auto;
     max-width: 1266px;
@@ -11,10 +12,11 @@ const AppContainer = styled.div`
 
 function App() {
     return (
-        <AppContainer>
+        <AppShell>
             <Hero />
             <MostSearched />
-        </AppContainer>
+            <Info />
+        </AppShell>
     );
 }
 
