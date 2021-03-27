@@ -4,6 +4,8 @@ import Hero from './components/Hero';
 import MostSearched from './components/MostSearched';
 import Info from './components/Info';
 import Footer from './components/Footer';
+import Header from './components/Header';
+import CatProfile from './components/CatProfile';
 
 const AppShell = styled.div`
     padding: 0 18px;
@@ -14,10 +16,12 @@ const AppShell = styled.div`
 function App() {
     return (
         <AppShell>
+            <Header />
             <Hero />
             <MostSearched />
             <Info />
             <Footer />
+            <CatProfile />
         </AppShell>
     );
 }
