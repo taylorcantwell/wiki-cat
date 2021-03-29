@@ -1,38 +1,95 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { mediaQueries as MQ } from '../GlobalStyles';
 import { ReactComponent as CloseIcon } from '../images/closeIcon.svg';
 import { ReactComponent as SearchIcon } from '../images/SearchIcon.svg';
+import { fetchCatList, searchTerm } from '../state/catListSlice';
+import { useTypedSelector } from '../hooks/useTypedSelector';
+import { Link } from 'react-router-dom';
 
-export interface Props {}
-
-const Search = (props: Props) => {
+const Search = (props: any) => {
+    const dispatch = useDispatch();
     const [modalActive, setModalActive] = useState(false);
+    const catList = useTypedSelector((state) => state.catList.catList);
+    const searchTermInput = useTypedSelector(
+        (state) => state.catList.searchTerm
+    );
+    const [redirectToCatProfile, setRedirectToCatProfile] = useState(false);
+    //** Fetch the list of cat breeds from API */
+    useEffect(() => {
+        dispatch(fetchCatList());
+    }, []);
+
+    //** Pass in fetched list of breeds and filter by the input search term. */
+    //**If there isn't a term, return unchanged list. */
+    type Filter = (
+        list: { name: string; id: string }[],
+        term?: string
+    ) => { name: string; id: string }[];
+
+    const filterCatList: Filter = (list, term) => {
+        if (term) {
+            const filteredList = list.filter(
+                (cat: { name: string; id: string }) => {
+                    return cat.name.includes(term);
+                }
+            );
+            return filteredList;
+        } else {
+            return list;
+        }
+    };
+
+    //** Event handler attached to each result and corresponding ID in */
+    const onClickHandle = () => {
+        console.log('clicked');
+        //** 1) Request cat information and store to state */
+        //** 2) Redirect to cat profile page */
+    };
+
+    const inputOnChangeHandle = (e: any) => {
+        dispatch(searchTerm(e.target.value));
+    };
+
     return (
         <>
             <Input
                 placeholder="Search"
                 type="text"
                 onClick={() => setModalActive(true)}
+                onChange={inputOnChangeHandle}
             ></Input>
             <StyledSearchIcon />
             <SearchBox></SearchBox>
 
             <MobileModal active={modalActive}>
-                <MobileModalClose onClick={() => setModalActive(false)} />
+                <MobileModalClose
+                    onClick={() => {
+                        setModalActive(false);
+                        setRedirectToCatProfile(true);
+                    }}
+                />
                 <MobileModalInput />
                 <MobileModalSearchIcon />
                 <MobileModalResultsContainer>
-                    <MobileModalResults>
-                        <MobileModalResultBody>Test Data</MobileModalResultBody>
-                    </MobileModalResults>
-                    <MobileModalResults>
-                        <MobileModalResultBody>Test Data</MobileModalResultBody>
-                    </MobileModalResults>
-                    <MobileModalResults>
-                        <MobileModalResultBody>Test Data</MobileModalResultBody>
-                    </MobileModalResults>
+                    {filterCatList(catList, searchTermInput).map(
+                        (cat: { name: string; id: string }) => {
+                            return (
+                                <MobileModalResults
+                                    id={cat.id}
+                                    onClick={onClickHandle}
+                                >
+                                    <MobileModalResultBody>
+                                        <Link to="/breed-profile">
+                                            {cat.name}
+                                        </Link>
+                                    </MobileModalResultBody>
+                                </MobileModalResults>
+                            );
+                        }
+                    )}
                 </MobileModalResultsContainer>
             </MobileModal>
         </>
@@ -107,8 +164,8 @@ const SearchBox = styled.div`
 
 const MobileModal = styled.div<{ active: boolean }>`
     display: ${(props) => (props.active ? 'block' : 'none')};
-    padding: 5px 18px;
     position: absolute;
+    z-index: 100;
     top: 0;
     left: 0;
     bottom: 0;
@@ -116,14 +173,13 @@ const MobileModal = styled.div<{ active: boolean }>`
     width: 100%;
     height: 100vh;
     background: #ffffff;
-    background: yellow;
     border-radius: 24px;
 
     @media only screen and (min-width: ${MQ.large}) {
         position: absolute;
         width: 394.62px;
-        top: 90%;
-        left: 4%;
+        top: 80%;
+        left: 9%;
         height: auto;
     }
 `;
@@ -161,6 +217,7 @@ const MobileModalResults = styled.div`
     display: flex;
     align-items: center;
     padding: 10px;
+    cursor: pointer;
 
     &:hover {
         background: rgba(151, 151, 151, 0.1);

@@ -6,6 +6,7 @@ import Info from './components/Info';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import CatProfile from './components/CatProfile';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
 const AppShell = styled.div`
     padding: 0 18px;
@@ -16,12 +17,16 @@ const AppShell = styled.div`
 function App() {
     return (
         <AppShell>
-            <Header />
-            <Hero />
-            <MostSearched />
-            <Info />
-            <Footer />
-            <CatProfile />
+            <Router>
+                <Route exact path="/">
+                    <Header />
+                    <Hero />
+                    <MostSearched />
+                    <Info />
+                    <Footer />
+                </Route>
+                <Route path="/breed-profile" component={CatProfile} />
+            </Router>
         </AppShell>
     );
 }

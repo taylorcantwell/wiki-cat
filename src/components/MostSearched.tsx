@@ -52,11 +52,8 @@ const Title = styled.h2`
     color: #291507;
 
     @media only screen and (min-width: ${MQ.large}) {
-        font-weight: 500;
         font-size: 18px;
     }
-
-    /* identical to box height */
 `;
 
 const Line = styled.div`
