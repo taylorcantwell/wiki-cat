@@ -3,58 +3,64 @@ import styled from 'styled-components';
 import Rating from './Rating';
 import PhotoGallery from './PhotoGallery';
 import { mediaQueries as MQ } from '../GlobalStyles';
+import { useSelector } from 'react-redux';
+import { useTypedSelector } from '../hooks/useTypedSelector';
 
 const CatProfile = () => {
+    const { profileInformation } = useTypedSelector((state) => {
+        return state.profileInformation;
+    });
+    console.log(profileInformation);
     return (
         <>
             <Container>
-                <Avatar src={'https://source.unsplash.com/random'} />
+                <Avatar src={`${profileInformation.image}`} />
                 <Main>
-                    <Title>Test</Title>
-                    <Body>Test data</Body>
+                    <Title>{profileInformation.name}</Title>
+                    <Body>{profileInformation.description}</Body>
                     <RatingContainer>
                         <Label>Temperament:</Label>
-                        <Rating rating={3} />
+                        <Body>{profileInformation.temperament}</Body>
                     </RatingContainer>
                     <RatingContainer>
                         <Label>Origin:</Label>
-                        <Rating rating={3} />
+                        <Body>{profileInformation.origin}</Body>
                     </RatingContainer>
                     <RatingContainer>
                         <Label>Life Span:</Label>
-                        <Rating rating={3} />
+                        <Body>{profileInformation.lifeSpan}</Body>
                     </RatingContainer>
                     <RatingContainer>
                         <Label>Adaptability:</Label>
-                        <Rating rating={3} />
+                        <Rating rating={profileInformation.adaptability} />
                     </RatingContainer>
                     <RatingContainer>
                         <Label>Affection level:</Label>
-                        <Rating rating={3} />
+                        <Rating rating={profileInformation.affectionLevel} />
                     </RatingContainer>
                     <RatingContainer>
                         <Label>Child Friendly:</Label>
-                        <Rating rating={3} />
+                        <Rating rating={profileInformation.childFriendly} />
                     </RatingContainer>
                     <RatingContainer>
                         <Label>Grooming:</Label>
-                        <Rating rating={3} />
+                        <Rating rating={profileInformation.grooming} />
                     </RatingContainer>
                     <RatingContainer>
                         <Label>Intelligence:</Label>
-                        <Rating rating={3} />
+                        <Rating rating={profileInformation.intelligence} />
                     </RatingContainer>
                     <RatingContainer>
                         <Label>Health issues:</Label>
-                        <Rating rating={3} />
+                        <Rating rating={profileInformation.healthIssues} />
                     </RatingContainer>
                     <RatingContainer>
                         <Label>Social needs:</Label>
-                        <Rating rating={3} />
+                        <Rating rating={profileInformation.socialNeeds} />
                     </RatingContainer>
                     <RatingContainer>
                         <Label>Stranger friendly:</Label>
-                        <Rating rating={3} />
+                        <Rating rating={profileInformation.strangerFriendly} />
                     </RatingContainer>
                 </Main>
             </Container>
@@ -70,7 +76,7 @@ const Container = styled.div`
     flex-direction: column;
 
     @media only screen and (min-width: ${MQ.large}) {
-        padding: 108px;
+        padding: 40px 108px;
         flex-direction: row;
     }
 `;
@@ -83,6 +89,8 @@ const Main = styled.div`
 
 const RatingContainer = styled.div`
     display: flex;
+    align-items: center;
+    height: 45px;
 `;
 
 const Title = styled.h2`
@@ -103,10 +111,12 @@ const Avatar = styled.img`
 const Body = styled.div`
     font-size: 18px;
     line-height: 22px;
-    margin-bottom: 25px;
+    font-weight: 500;
     color: #291507;
 `;
 
 const Label = styled.p`
     width: 150px;
+    font-weight: bold;
+    font-size: 16px;
 `;

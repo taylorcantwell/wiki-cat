@@ -1,20 +1,20 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { mediaQueries as MQ } from '../GlobalStyles';
+import { useTypedSelector } from '../hooks/useTypedSelector';
 
 const PhotoGallery = () => {
+    const { profileInformation } = useTypedSelector((state) => {
+        return state.profileInformation;
+    });
+
     return (
         <Container>
             <OtherPhotoLabel>Other Photos</OtherPhotoLabel>
             <PhotoContainer>
-                <Photo src={'https://source.unsplash.com/random'} />
-                <Photo src={'https://source.unsplash.com/random'} />
-                <Photo src={'https://source.unsplash.com/random'} />
-                <Photo src={'https://source.unsplash.com/random'} />
-                <Photo src={'https://source.unsplash.com/random'} />
-                <Photo src={'https://source.unsplash.com/random'} />
-                <Photo src={'https://source.unsplash.com/random'} />
-                <Photo src={'https://source.unsplash.com/random'} />
+                {profileInformation.images.map((img) => {
+                    return <Photo src={img} />;
+                })}
             </PhotoContainer>
         </Container>
     );
@@ -36,7 +36,7 @@ const PhotoContainer = styled.div`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     justify-items: center;
-    grid-gap: 16px;
+    grid-gap: 50px;
 
     @media only screen and (min-width: ${MQ.large}) {
         grid-template-columns: repeat(4, 1fr);
@@ -44,9 +44,9 @@ const PhotoContainer = styled.div`
 `;
 
 const Photo = styled.img`
-    max-width: 125px;
-
-    background: url('https://source.unsplash.com/random');
+    width: 278px;
+    height: 278px;
+    object-fit: cover;
     border-radius: 12px;
     @media only screen and (min-width: ${MQ.large}) {
         max-width: 250px;

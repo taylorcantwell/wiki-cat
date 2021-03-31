@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { mediaQueries as MQ } from '../GlobalStyles';
 
 interface Props {
-    rating: number;
+    rating: string | number | null;
 }
 
 const Rating = (props: Props) => {
@@ -22,8 +22,7 @@ const Rating = (props: Props) => {
 
 export default Rating;
 
-const Container = styled.div<{ rating: number }>`
-    margin-bottom: 30px;
+const Container = styled.div<{ rating: string | number | null }>`
     display: flex;
     justify-content: space-between;
     align-items: center;

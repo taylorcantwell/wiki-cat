@@ -18,8 +18,8 @@ function App() {
     return (
         <AppShell>
             <Router>
+                <Header />
                 <Route exact path="/">
-                    <Header />
                     <Hero />
                     <MostSearched />
                     <Info />

@@ -1,13 +1,15 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { mediaQueries as MQ } from '../GlobalStyles';
+import { useTypedSelector } from '../hooks/useTypedSelector';
 import { ReactComponent as CloseIcon } from '../images/closeIcon.svg';
 import { ReactComponent as SearchIcon } from '../images/SearchIcon.svg';
 import { fetchCatList, searchTerm } from '../state/catListSlice';
-import { useTypedSelector } from '../hooks/useTypedSelector';
-import { Link } from 'react-router-dom';
+import { fetchCatProfileInformation } from '../state/profileSlice';
+import { filterCatList } from '../util/searchListFilter';
 
 const Search = (props: any) => {
     const dispatch = useDispatch();
@@ -16,37 +18,15 @@ const Search = (props: any) => {
     const searchTermInput = useTypedSelector(
         (state) => state.catList.searchTerm
     );
-    const [redirectToCatProfile, setRedirectToCatProfile] = useState(false);
+
     //** Fetch the list of cat breeds from API */
     useEffect(() => {
         dispatch(fetchCatList());
     }, []);
 
-    //** Pass in fetched list of breeds and filter by the input search term. */
-    //**If there isn't a term, return unchanged list. */
-    type Filter = (
-        list: { name: string; id: string }[],
-        term?: string
-    ) => { name: string; id: string }[];
-
-    const filterCatList: Filter = (list, term) => {
-        if (term) {
-            const filteredList = list.filter(
-                (cat: { name: string; id: string }) => {
-                    return cat.name.includes(term);
-                }
-            );
-            return filteredList;
-        } else {
-            return list;
-        }
-    };
-
     //** Event handler attached to each result and corresponding ID in */
-    const onClickHandle = () => {
-        console.log('clicked');
-        //** 1) Request cat information and store to state */
-        //** 2) Redirect to cat profile page */
+    const onClickHandle = (id: string) => {
+        dispatch(fetchCatProfileInformation(id));
     };
 
     const inputOnChangeHandle = (e: any) => {
@@ -68,7 +48,6 @@ const Search = (props: any) => {
                 <MobileModalClose
                     onClick={() => {
                         setModalActive(false);
-                        setRedirectToCatProfile(true);
                     }}
                 />
                 <MobileModalInput />
@@ -78,8 +57,10 @@ const Search = (props: any) => {
                         (cat: { name: string; id: string }) => {
                             return (
                                 <MobileModalResults
-                                    id={cat.id}
-                                    onClick={onClickHandle}
+                                    key={cat.id}
+                                    onClick={() => {
+                                        onClickHandle(cat.id);
+                                    }}
                                 >
                                     <MobileModalResultBody>
                                         <Link to="/breed-profile">
