@@ -1,11 +1,13 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import catReducer from '../state/catListSlice';
 import profileReducer from '../state/profileSlice';
+import visitsReducer from '../state/visitsSlice';
 
 export const store = configureStore({
     reducer: {
         catList: catReducer,
         profileInformation: profileReducer,
+        visitList: visitsReducer,
     },
 });
 

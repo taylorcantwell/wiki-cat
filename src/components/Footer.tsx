@@ -1,12 +1,20 @@
 import * as React from 'react';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
-import { ReactComponent as CatwikiLogo } from '../images/CatwikiLogo.svg';
 import { mediaQueries as MQ } from '../GlobalStyles';
+import { ReactComponent as CatwikiLogo } from '../images/CatwikiLogo.svg';
 
 const Footer = () => {
+    const history = useHistory();
+    const onLogoClickHandle = () => {
+        history.push({
+            pathname: '/',
+        });
+    };
+
     return (
         <Container>
-            <Logo />
+            <Logo onClick={onLogoClickHandle} />
             <Body>© created by Taylor - devChallenge.io 2021</Body>
         </Container>
     );
@@ -35,6 +43,7 @@ const Container = styled.div`
 
 const Logo = styled(CatwikiLogo)`
     width: 100px;
+    cursor: pointer;
 
     path {
         fill: white;

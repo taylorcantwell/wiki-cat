@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -9,6 +9,7 @@ import { ReactComponent as CloseIcon } from '../images/closeIcon.svg';
 import { ReactComponent as SearchIcon } from '../images/SearchIcon.svg';
 import { fetchCatList, searchTerm } from '../state/catListSlice';
 import { fetchCatProfileInformation } from '../state/profileSlice';
+import { updateVisit } from '../util/incrementVisitorCounter';
 import { filterCatList } from '../util/searchListFilter';
 
 const Search = (props: any) => {
@@ -18,15 +19,36 @@ const Search = (props: any) => {
     const searchTermInput = useTypedSelector(
         (state) => state.catList.searchTerm
     );
+    const node = useRef<HTMLInputElement>(null);
+
+    //**Modal functionality */
+    useEffect(() => {
+        if (modalActive) {
+            document.addEventListener('mousedown', handleClickOutside);
+        } else {
+            document.removeEventListener('mousedown', handleClickOutside);
+        }
+    }, [modalActive]);
+
+    const handleClickOutside = (e: MouseEvent) => {
+        //@ts-ignore
+        if (node.current!.contains(e.target)) {
+            document.removeEventListener('mousedown', handleClickOutside);
+            return;
+        }
+
+        setModalActive(false);
+    };
 
     //** Fetch the list of cat breeds from API */
     useEffect(() => {
         dispatch(fetchCatList());
     }, []);
 
-    //** Event handler attached to each result and corresponding ID in */
+    //** On click of a result, fetch breed information and update the vistor counter*/
     const onClickHandle = (id: string) => {
         dispatch(fetchCatProfileInformation(id));
+        updateVisit(id);
     };
 
     const inputOnChangeHandle = (e: any) => {
@@ -42,37 +64,35 @@ const Search = (props: any) => {
                 onChange={inputOnChangeHandle}
             ></Input>
             <StyledSearchIcon />
-            <SearchBox></SearchBox>
 
-            <MobileModal active={modalActive}>
-                <MobileModalClose
+            <Modal active={modalActive}>
+                <ModalClose
                     onClick={() => {
                         setModalActive(false);
                     }}
                 />
-                <MobileModalInput />
-                <MobileModalSearchIcon />
-                <MobileModalResultsContainer>
+                <ModalInput />
+                <ModalSearchIcon />
+                <ModalResultsContainer ref={node}>
                     {filterCatList(catList, searchTermInput).map(
                         (cat: { name: string; id: string }) => {
                             return (
-                                <MobileModalResults
+                                <ModalResults
+                                    to="/breed-profile"
                                     key={cat.id}
                                     onClick={() => {
                                         onClickHandle(cat.id);
                                     }}
                                 >
-                                    <MobileModalResultBody>
-                                        <Link to="/breed-profile">
-                                            {cat.name}
-                                        </Link>
-                                    </MobileModalResultBody>
-                                </MobileModalResults>
+                                    <ModalResultLink to="/breed-profile">
+                                        {cat.name}
+                                    </ModalResultLink>
+                                </ModalResults>
                             );
                         }
                     )}
-                </MobileModalResultsContainer>
-            </MobileModal>
+                </ModalResultsContainer>
+            </Modal>
         </>
     );
 };
@@ -124,7 +144,7 @@ const StyledSearchIcon = styled(SearchIcon)`
     }
 `;
 
-const MobileModalSearchIcon = styled(StyledSearchIcon)`
+const ModalSearchIcon = styled(StyledSearchIcon)`
     position: relative;
     height: 25px;
     width: 25px;
@@ -138,12 +158,7 @@ const MobileModalSearchIcon = styled(StyledSearchIcon)`
     }
 `;
 
-const SearchBox = styled.div`
-    padding: 10px 8px;
-    opacity: 1;
-`;
-
-const MobileModal = styled.div<{ active: boolean }>`
+const Modal = styled.div<{ active: boolean }>`
     display: ${(props) => (props.active ? 'block' : 'none')};
     position: absolute;
     z-index: 100;
@@ -154,18 +169,18 @@ const MobileModal = styled.div<{ active: boolean }>`
     width: 100%;
     height: 100vh;
     background: #ffffff;
-    border-radius: 24px;
+    border-radius: 7px;
 
     @media only screen and (min-width: ${MQ.large}) {
         position: absolute;
         width: 394.62px;
-        top: 80%;
+        top: 85%;
         left: 9%;
         height: auto;
     }
 `;
 
-const MobileModalClose = styled(CloseIcon)`
+const ModalClose = styled(CloseIcon)`
     position: relative;
     left: 95%;
     cursor: pointer;
@@ -175,13 +190,12 @@ const MobileModalClose = styled(CloseIcon)`
     }
 `;
 
-const MobileModalInput = styled.input`
+const ModalInput = styled.input`
     padding: 0 20px;
     width: 100%;
     height: 45.51px;
     background: #ffffff;
     border: 1px solid #000000;
-    border-radius: 59px;
     margin-top: 20px;
     outline: none;
 
@@ -190,23 +204,43 @@ const MobileModalInput = styled.input`
     }
 `;
 
-const MobileModalResultsContainer = styled.div``;
+const ModalResultsContainer = styled.div`
+    overflow-y: scroll;
+    max-height: 350px;
+    background: #ffffff;
+    border-radius: 7px;
 
-const MobileModalResults = styled.div`
+    &::-webkit-scrollbar {
+        width: 5px; /* width of the entire scrollbar */
+    }
+
+    &::-webkit-scrollbar-track {
+        display: none;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 20px; /* roundness of the scroll thumb */
+        border: 3px solid grey; /* creates padding around scroll thumb */
+    }
+`;
+
+const ModalResults = styled(Link)`
     height: 56.16px;
-    border-radius: 12px;
     display: flex;
     align-items: center;
     padding: 10px;
     cursor: pointer;
+    text-decoration: none;
 
     &:hover {
         background: rgba(151, 151, 151, 0.1);
     }
 `;
 
-const MobileModalResultBody = styled.p`
+const ModalResultLink = styled(Link)`
     font-weight: 500;
     font-size: 18px;
     color: #000000;
+    text-decoration: none;
+    text-transform: capitalize;
 `;

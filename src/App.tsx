@@ -7,6 +7,8 @@ import Footer from './components/Footer';
 import Header from './components/Header';
 import CatProfile from './components/CatProfile';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { useTypedSelector } from './hooks/useTypedSelector';
+import Loader from './components/Loader';
 
 const AppShell = styled.div`
     padding: 0 18px;
@@ -15,18 +17,33 @@ const AppShell = styled.div`
 `;
 
 function App() {
+    const isBreedListLoaded = useTypedSelector((state) => {
+        return state.catList.loadedSearchList;
+    });
+
+    const isPopularBreedsLoaded = useTypedSelector((state) => {
+        return state.visitList.loadedTopBreedsList;
+    });
+
+    const everythingLoaded = isBreedListLoaded && isPopularBreedsLoaded;
+
+    console.log(everythingLoaded);
+    console.log(isPopularBreedsLoaded);
+
     return (
         <AppShell>
             <Router>
                 <Header />
+                {!everythingLoaded && <Loader />}
                 <Route exact path="/">
                     <Hero />
                     <MostSearched />
                     <Info />
-                    <Footer />
                 </Route>
                 <Route path="/breed-profile" component={CatProfile} />
+                <Footer />
             </Router>
+            ) )
         </AppShell>
     );
 }

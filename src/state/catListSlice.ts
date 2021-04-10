@@ -5,11 +5,13 @@ import { AppThunk, RootState } from './store';
 interface CatList {
     catList: { name: string; id: string }[];
     searchTerm: string;
+    loadedSearchList: null | boolean;
 }
 
 const initialState: CatList = {
     catList: [],
     searchTerm: '',
+    loadedSearchList: null,
 };
 
 export const catSlice = createSlice({
@@ -22,18 +24,20 @@ export const catSlice = createSlice({
         searchTerm: (state, action: PayloadAction<string>) => {
             state.searchTerm = action.payload;
         },
+
+        loadedSearchList: (state, action: PayloadAction<boolean>) => {
+            state.loadedSearchList = action.payload;
+        },
     },
 });
 
-export const { catList, searchTerm } = catSlice.actions;
+export const { catList, searchTerm, loadedSearchList } = catSlice.actions;
 
 export const fetchCatList = (): AppThunk => async (dispatch) => {
     const data = await axios.get('http://localhost:4000/search/');
     const catData = data.data;
     dispatch(catList(catData));
+    dispatch(loadedSearchList(true));
 };
-
-export const selectCatList = (state: RootState) => state.catList.catList;
-export const selectSearchTerm = (state: RootState) => state.catList.searchTerm;
 
 export default catSlice.reducer;

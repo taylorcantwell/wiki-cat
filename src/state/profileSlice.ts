@@ -4,6 +4,7 @@ import { AppThunk, RootState } from './store';
 
 interface ProfileInformation {
     profileInformation: {
+        id: string;
         name: string;
         description: string;
         image: string;
@@ -20,10 +21,13 @@ interface ProfileInformation {
         socialNeeds: number | null;
         strangerFriendly: number | null;
     };
+
+    loading: boolean | null;
 }
 
 const initialState: ProfileInformation = {
     profileInformation: {
+        id: '',
         name: '',
         description: '',
         image: '',
@@ -40,6 +44,8 @@ const initialState: ProfileInformation = {
         socialNeeds: null,
         strangerFriendly: null,
     },
+
+    loading: null,
 };
 
 export const profileSlice = createSlice({
@@ -53,16 +59,21 @@ export const profileSlice = createSlice({
             //@ts-ignore
             state.profileInformation = action.payload;
         },
+        profileLoading: (state, action: PayloadAction<boolean>) => {
+            state.loading = action.payload;
+        },
     },
 });
 
-export const { profileInformation } = profileSlice.actions;
+export const { profileInformation, profileLoading } = profileSlice.actions;
 
 export const fetchCatProfileInformation = (id: string): AppThunk => async (
     dispatch
 ) => {
+    dispatch(profileLoading(true));
     const { data } = await axios.get(`http://localhost:4000/breed/${id}`);
     dispatch(profileInformation(data));
+    dispatch(profileLoading(false));
 };
 
 // export const selectprofileSlice = (state: RootState) => state.catList.catList;

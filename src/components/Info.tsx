@@ -60,6 +60,10 @@ const Body = styled.p`
 
 const ReadMore = styled.p`
     margin-top: 27px;
+    font-size: 18px;
+    color: rgba(41, 21, 7, 0.6);
+    font-weight: bold;
+    cursor: not-allowed;
 `;
 
 const Gallery = styled.div`

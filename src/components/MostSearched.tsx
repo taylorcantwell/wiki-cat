@@ -1,33 +1,60 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import { mediaQueries as MQ } from '../GlobalStyles';
-
-//! fix bug alignment of cards - right on is bursting out
+import { useTypedSelector } from '../hooks/useTypedSelector';
+import { fetchCatProfileInformation } from '../state/profileSlice';
+import { fetchTopFour } from '../state/visitsSlice';
+import { updateVisit } from '../util/incrementVisitorCounter';
 
 const MostSearched = () => {
+    const dispatch = useDispatch();
+    const history = useHistory();
+
+    const bag = useTypedSelector((state) => {
+        return state.visitList.list;
+    });
+
+    useEffect(() => {
+        try {
+            dispatch(fetchTopFour());
+        } catch (err) {
+            console.log(err.message);
+        }
+    }, []);
+
+    const onClickHandle = (id: string) => {
+        dispatch(fetchCatProfileInformation(id));
+        updateVisit(id);
+        history.push({
+            pathname: '/breed-profile',
+        });
+    };
+
     return (
         <Container>
-            <Title>Most Searched Breeds</Title>
+            <Title>Most Viewed Breeds</Title>
             <Line />
             <Subtitle>66+ Breeds For you to discover</Subtitle>
             <SeeMore>See More!</SeeMore>
             <CardsContainer>
-                <Card>
-                    <Image />
-                    <ImageLabel label={'test'}>Test</ImageLabel>
-                </Card>
-                <Card>
-                    <Image />
-                    <ImageLabel label={'test'}>Test</ImageLabel>
-                </Card>
-                <Card>
-                    <Image />
-                    <ImageLabel label={'test'}>Test</ImageLabel>
-                </Card>
-                <Card>
-                    <Image />
-                    <ImageLabel label={'test'}>Test</ImageLabel>
-                </Card>
+                {bag &&
+                    bag.map((ele: any) => {
+                        return (
+                            <Card
+                                onClick={() => {
+                                    onClickHandle(ele.id);
+                                }}
+                            >
+                                <Avatar src={`${ele.image}`} />
+                                <ImageLabel label={ele.image}>
+                                    {ele.name}
+                                </ImageLabel>
+                                <VisitLabel>Visits: {ele.visits}</VisitLabel>
+                            </Card>
+                        );
+                    })}
             </CardsContainer>
         </Container>
     );
@@ -77,13 +104,14 @@ const Subtitle = styled.h3`
 `;
 
 const SeeMore = styled.p`
+    cursor: not-allowed;
     display: none;
     position: absolute;
     font-weight: bold;
     font-size: 18px;
     color: rgba(41, 21, 7, 0.6);
     right: 10%;
-    top: 30%;
+    top: 27%;
     @media only screen and (min-width: ${MQ.large}) {
         display: block;
     }
@@ -101,29 +129,31 @@ const CardsContainer = styled.div`
 `;
 
 const Card = styled.div`
+    cursor: pointer;
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 `;
 
-const Image = styled.div`
+const Avatar = styled.img`
     width: 134.77px;
     height: 134.77px;
-    background: url('https://source.unsplash.com/random');
     border-radius: 12px;
-
     @media only screen and (min-width: ${MQ.large}) {
         width: 220px;
         height: 220px;
-        background: url('https://source.unsplash.com/random');
-        border-radius: 24px;
     }
 `;
 
 const ImageLabel = styled.p<{ label: string }>`
     font-weight: 600;
     font-size: 18px;
-    line-height: 22px;
+    color: #291507;
+`;
+
+const VisitLabel = styled.p`
+    font-size: 18px;
     color: #291507;
 `;

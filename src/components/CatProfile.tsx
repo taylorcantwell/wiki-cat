@@ -1,16 +1,15 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import Rating from './Rating';
-import PhotoGallery from './PhotoGallery';
 import { mediaQueries as MQ } from '../GlobalStyles';
-import { useSelector } from 'react-redux';
 import { useTypedSelector } from '../hooks/useTypedSelector';
+import PhotoGallery from './PhotoGallery';
+import Rating from './Rating';
 
 const CatProfile = () => {
-    const { profileInformation } = useTypedSelector((state) => {
-        return state.profileInformation;
-    });
-    console.log(profileInformation);
+    const { profileInformation } = useTypedSelector(
+        (state) => state.profileInformation
+    );
+
     return (
         <>
             <Container>
@@ -18,10 +17,10 @@ const CatProfile = () => {
                 <Main>
                     <Title>{profileInformation.name}</Title>
                     <Body>{profileInformation.description}</Body>
-                    <RatingContainer>
-                        <Label>Temperament:</Label>
+                    <RatingContainerTemper>
+                        <LabelTemper>Temperament:</LabelTemper>
                         <Body>{profileInformation.temperament}</Body>
-                    </RatingContainer>
+                    </RatingContainerTemper>
                     <RatingContainer>
                         <Label>Origin:</Label>
                         <Body>{profileInformation.origin}</Body>
@@ -82,6 +81,7 @@ const Container = styled.div`
 `;
 
 const Main = styled.div`
+    flex-basis: 50%;
     @media only screen and (min-width: ${MQ.large}) {
         margin-left: 115px;
     }
@@ -91,6 +91,24 @@ const RatingContainer = styled.div`
     display: flex;
     align-items: center;
     height: 45px;
+`;
+
+const Label = styled.p`
+    width: 150px;
+    font-weight: bold;
+    font-size: 16px;
+    margin-right: 30px;
+`;
+
+const RatingContainerTemper = styled(RatingContainer)`
+    align-items: flex-start;
+    flex-direction: column;
+    height: auto;
+    margin-top: 20px;
+`;
+
+const LabelTemper = styled(Label)`
+    margin-bottom: 8px;
 `;
 
 const Title = styled.h2`
@@ -113,10 +131,4 @@ const Body = styled.div`
     line-height: 22px;
     font-weight: 500;
     color: #291507;
-`;
-
-const Label = styled.p`
-    width: 150px;
-    font-weight: bold;
-    font-size: 16px;
 `;
