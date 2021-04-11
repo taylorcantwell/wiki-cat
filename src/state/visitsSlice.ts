@@ -2,12 +2,18 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { AppThunk } from './store';
 
+interface List {
+    id: string;
+    image: string;
+    visits: number;
+    name: string;
+}
 interface InitialState {
-    list: [];
+    list: List[] | null;
     loadedTopBreedsList: boolean;
 }
 
-const initialState: any = {
+const initialState: InitialState = {
     list: null,
     loadedTopBreedsList: false,
 };

@@ -22,8 +22,6 @@ body {
     line-height: 1.6;
     font-family: 'Montserrat', sans-serif;
     color: #291507;
- 
-    /* overflow: scroll; */
 }
 
 input,

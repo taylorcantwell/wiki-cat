@@ -10,6 +10,7 @@ const MostSearched = () => {
     const dispatch = useDispatch();
     const history = useHistory();
 
+    //** Fetch the 4 most visited breeds as per the database */
     useEffect(() => {
         dispatch(fetchTopFour());
     }, []);
@@ -18,6 +19,7 @@ const MostSearched = () => {
         (state) => state.visitList.list
     );
 
+    //** Redirect to cat profile on click of one of the 4 most visted breeds */
     const onClickHandle = (id: string) => {
         history.push({
             pathname: `/breed-profile/${id}`,
@@ -32,18 +34,16 @@ const MostSearched = () => {
             <SeeMore>See More!</SeeMore>
             <CardsContainer>
                 {fourMostSearchedBreeds &&
-                    fourMostSearchedBreeds.map((ele: any) => {
+                    fourMostSearchedBreeds.map((breed) => {
                         return (
                             <Card
                                 onClick={() => {
-                                    onClickHandle(ele.id);
+                                    onClickHandle(breed.id);
                                 }}
                             >
-                                <Avatar src={`${ele.image}`} />
-                                <ImageLabel label={ele.image}>
-                                    {ele.name}
-                                </ImageLabel>
-                                <VisitLabel>Visits: {ele.visits}</VisitLabel>
+                                <Avatar src={`${breed.image}`} />
+                                <ImageLabel>{breed.name}</ImageLabel>
+                                <VisitLabel>Visits: {breed.visits}</VisitLabel>
                             </Card>
                         );
                     })}
@@ -102,6 +102,7 @@ const SeeMore = styled.p`
     color: rgba(41, 21, 7, 0.6);
     right: 10%;
     top: 27%;
+
     @media only screen and (min-width: ${MQ.large}) {
         display: block;
     }
@@ -154,13 +155,18 @@ const Avatar = styled.img`
     }
 `;
 
-const ImageLabel = styled.p<{ label: string }>`
+const ImageLabel = styled.p`
     font-weight: 600;
-    font-size: 12px;
+    font-size: 14px;
     margin-top: 11px;
+    @media only screen and (min-width: ${MQ.large}) {
+        font-size: 18px;
+    }
 `;
 
 const VisitLabel = styled.p`
-    font-weight: 600;
-    font-size: 10px;
+    font-size: 16px;
+    @media only screen and (min-width: ${MQ.large}) {
+        font-size: 10px;
+    }
 `;

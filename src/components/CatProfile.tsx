@@ -148,7 +148,7 @@ const LabelTemper = styled(Label)`
 const Title = styled.h2`
     font-weight: 600;
     font-size: 36px;
-    margin-bottom: 25px;
+    margin: 25px 0;
     color: #291507;
 `;
 
