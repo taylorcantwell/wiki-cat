@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
-import Hero from './components/Hero';
-import MostSearched from './components/MostSearched';
-import Info from './components/Info';
+import CatProfile from './components/CatProfile';
 import Footer from './components/Footer';
 import Header from './components/Header';
-import CatProfile from './components/CatProfile';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-import { useTypedSelector } from './hooks/useTypedSelector';
+import Hero from './components/Hero';
+import Info from './components/Info';
 import Loader from './components/Loader';
+import MostSearched from './components/MostSearched';
+import NoPage from './components/NoPage';
+import { useTypedSelector } from './hooks/useTypedSelector';
+import { fetchCatList } from './state/catListSlice';
+import { fetchTopFour } from './state/visitsSlice';
 
 const AppShell = styled.div`
     padding: 0 18px;
@@ -17,6 +21,22 @@ const AppShell = styled.div`
 `;
 
 function App() {
+    const dispatch = useDispatch();
+    //** Fetch the list of cat breeds for the search bar */
+    useEffect(() => {
+        dispatch(fetchCatList());
+    }, []);
+
+    //**Fetch the top four most visited breeds */
+    useEffect(() => {
+        try {
+            dispatch(fetchTopFour());
+        } catch (err) {
+            console.log(err.message);
+        }
+    }, []);
+
+    //**Grab loading state to determine what to render */
     const isBreedListLoaded = useTypedSelector((state) => {
         return state.catList.loadedSearchList;
     });
@@ -27,23 +47,31 @@ function App() {
 
     const everythingLoaded = isBreedListLoaded && isPopularBreedsLoaded;
 
-    console.log(everythingLoaded);
-    console.log(isPopularBreedsLoaded);
-
     return (
         <AppShell>
-            <Router>
-                <Header />
-                {!everythingLoaded && <Loader />}
-                <Route exact path="/">
-                    <Hero />
-                    <MostSearched />
-                    <Info />
-                </Route>
-                <Route path="/breed-profile" component={CatProfile} />
-                <Footer />
-            </Router>
-            ) )
+            {!everythingLoaded ? (
+                <Loader />
+            ) : (
+                <>
+                    <Router>
+                        <Header />
+                        <Switch>
+                            <Route exact path="/">
+                                <Hero />
+                                <MostSearched />
+                                <Info />
+                            </Route>
+                            <Route
+                                path="/breed-profile/:id"
+                                component={CatProfile}
+                            />
+                            <Route path="/404" component={NoPage} />
+                            <Route component={NoPage} />
+                        </Switch>
+                        <Footer />
+                    </Router>
+                </>
+            )}
         </AppShell>
     );
 }

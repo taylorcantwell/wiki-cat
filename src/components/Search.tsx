@@ -7,12 +7,10 @@ import { mediaQueries as MQ } from '../GlobalStyles';
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import { ReactComponent as CloseIcon } from '../images/closeIcon.svg';
 import { ReactComponent as SearchIcon } from '../images/SearchIcon.svg';
-import { fetchCatList, searchTerm } from '../state/catListSlice';
-import { fetchCatProfileInformation } from '../state/profileSlice';
-import { updateVisit } from '../util/incrementVisitorCounter';
+import { searchTerm } from '../state/catListSlice';
 import { filterCatList } from '../util/searchListFilter';
 
-const Search = (props: any) => {
+const Search = () => {
     const dispatch = useDispatch();
     const [modalActive, setModalActive] = useState(false);
     const catList = useTypedSelector((state) => state.catList.catList);
@@ -40,17 +38,6 @@ const Search = (props: any) => {
         setModalActive(false);
     };
 
-    //** Fetch the list of cat breeds from API */
-    useEffect(() => {
-        dispatch(fetchCatList());
-    }, []);
-
-    //** On click of a result, fetch breed information and update the vistor counter*/
-    const onClickHandle = (id: string) => {
-        dispatch(fetchCatProfileInformation(id));
-        updateVisit(id);
-    };
-
     const inputOnChangeHandle = (e: any) => {
         dispatch(searchTerm(e.target.value));
     };
@@ -74,22 +61,25 @@ const Search = (props: any) => {
                 <ModalInput />
                 <ModalSearchIcon />
                 <ModalResultsContainer ref={node}>
-                    {filterCatList(catList, searchTermInput).map(
-                        (cat: { name: string; id: string }) => {
-                            return (
-                                <ModalResults
-                                    to="/breed-profile"
-                                    key={cat.id}
-                                    onClick={() => {
-                                        onClickHandle(cat.id);
-                                    }}
-                                >
-                                    <ModalResultLink to="/breed-profile">
-                                        {cat.name}
-                                    </ModalResultLink>
-                                </ModalResults>
-                            );
-                        }
+                    {!filterCatList(catList, searchTermInput)[0] ? (
+                        <ModalNoResult>No result</ModalNoResult>
+                    ) : (
+                        filterCatList(catList, searchTermInput).map(
+                            (cat: { name: string; id: string }) => {
+                                return (
+                                    <ModalResults
+                                        to={`/breed-profile/${cat.id}`}
+                                        key={cat.id}
+                                    >
+                                        <ModalResultLink
+                                            to={`/breed-profile/${cat.id}`}
+                                        >
+                                            {cat.name}
+                                        </ModalResultLink>
+                                    </ModalResults>
+                                );
+                            }
+                        )
                     )}
                 </ModalResultsContainer>
             </Modal>
@@ -164,10 +154,8 @@ const Modal = styled.div<{ active: boolean }>`
     z-index: 100;
     top: 0;
     left: 0;
-    bottom: 0;
     right: 0;
     width: 100%;
-    height: 100vh;
     background: #ffffff;
     border-radius: 7px;
 
@@ -211,7 +199,7 @@ const ModalResultsContainer = styled.div`
     border-radius: 7px;
 
     &::-webkit-scrollbar {
-        width: 5px; /* width of the entire scrollbar */
+        width: 5px;
     }
 
     &::-webkit-scrollbar-track {
@@ -219,8 +207,8 @@ const ModalResultsContainer = styled.div`
     }
 
     &::-webkit-scrollbar-thumb {
-        border-radius: 20px; /* roundness of the scroll thumb */
-        border: 3px solid grey; /* creates padding around scroll thumb */
+        border-radius: 20px;
+        border: 3px solid grey;
     }
 `;
 
@@ -235,6 +223,18 @@ const ModalResults = styled(Link)`
     &:hover {
         background: rgba(151, 151, 151, 0.1);
     }
+`;
+
+const ModalNoResult = styled.div`
+    height: 56.16px;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 18px;
+    color: #000000;
+    text-transform: capitalize;
 `;
 
 const ModalResultLink = styled(Link)`

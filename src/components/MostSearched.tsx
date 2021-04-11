@@ -12,10 +12,6 @@ const MostSearched = () => {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const bag = useTypedSelector((state) => {
-        return state.visitList.list;
-    });
-
     useEffect(() => {
         try {
             dispatch(fetchTopFour());
@@ -24,11 +20,13 @@ const MostSearched = () => {
         }
     }, []);
 
+    const bag = useTypedSelector((state) => {
+        return state.visitList.list;
+    });
+
     const onClickHandle = (id: string) => {
-        dispatch(fetchCatProfileInformation(id));
-        updateVisit(id);
         history.push({
-            pathname: '/breed-profile',
+            pathname: `/breed-profile/${id}`,
         });
     };
 

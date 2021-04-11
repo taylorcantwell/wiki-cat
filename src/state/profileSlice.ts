@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { AppThunk, RootState } from './store';
+import { useHistory } from 'react-router';
 
 interface ProfileInformation {
     profileInformation: {
@@ -22,7 +23,7 @@ interface ProfileInformation {
         strangerFriendly: number | null;
     };
 
-    loading: boolean | null;
+    profileLoading: boolean | null;
 }
 
 const initialState: ProfileInformation = {
@@ -45,7 +46,7 @@ const initialState: ProfileInformation = {
         strangerFriendly: null,
     },
 
-    loading: null,
+    profileLoading: null,
 };
 
 export const profileSlice = createSlice({
@@ -60,23 +61,27 @@ export const profileSlice = createSlice({
             state.profileInformation = action.payload;
         },
         profileLoading: (state, action: PayloadAction<boolean>) => {
-            state.loading = action.payload;
+            state.profileLoading = action.payload;
         },
     },
 });
 
 export const { profileInformation, profileLoading } = profileSlice.actions;
 
-export const fetchCatProfileInformation = (id: string): AppThunk => async (
-    dispatch
-) => {
-    dispatch(profileLoading(true));
-    const { data } = await axios.get(`http://localhost:4000/breed/${id}`);
-    dispatch(profileInformation(data));
-    dispatch(profileLoading(false));
+export const fetchCatProfileInformation = (
+    id: string,
+    history: any
+): AppThunk => async (dispatch) => {
+    try {
+        dispatch(profileLoading(true));
+        const { data } = await axios.get(`http://localhost:4000/breed/${id}`);
+        dispatch(profileInformation(data));
+        dispatch(profileLoading(false));
+    } catch (err) {
+        history.push({
+            pathname: '/404',
+        });
+    }
 };
-
-// export const selectprofileSlice = (state: RootState) => state.catList.catList;
-// export const selectSearchTerm = (state: RootState) => state.catList.searchTerm;
 
 export default profileSlice.reducer;
