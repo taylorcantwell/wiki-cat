@@ -13,11 +13,11 @@ import { filterCatList } from '../util/searchListFilter';
 const Search = () => {
     const dispatch = useDispatch();
     const [modalActive, setModalActive] = useState(false);
+    const ref = useRef<HTMLInputElement>(null);
     const catList = useTypedSelector((state) => state.catList.catList);
     const searchTermInput = useTypedSelector(
         (state) => state.catList.searchTerm
     );
-    const node = useRef<HTMLInputElement>(null);
 
     //**Modal functionality */
     useEffect(() => {
@@ -28,9 +28,8 @@ const Search = () => {
         }
     }, [modalActive]);
 
-    const handleClickOutside = (e: MouseEvent) => {
-        //@ts-ignore
-        if (node.current!.contains(e.target)) {
+    const handleClickOutside = (e: any) => {
+        if (ref.current!.contains(e.target)) {
             document.removeEventListener('mousedown', handleClickOutside);
             return;
         }
@@ -38,19 +37,24 @@ const Search = () => {
         setModalActive(false);
     };
 
-    const inputOnChangeHandle = (e: any) => {
-        dispatch(searchTerm(e.target.value));
+    const inputOnChangeHandle = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        dispatch(searchTerm(event.target.value));
     };
 
     return (
         <>
-            <Input
-                placeholder="Search"
-                type="text"
-                onClick={() => setModalActive(true)}
-                onChange={inputOnChangeHandle}
-            ></Input>
-            <StyledSearchIcon />
+            <InputContainer>
+                <Input
+                    placeholder="Search"
+                    type="text"
+                    onClick={() => setModalActive(true)}
+                    onChange={inputOnChangeHandle}
+                    active={modalActive}
+                ></Input>
+                <StyledSearchIcon active={modalActive} />
+            </InputContainer>
 
             <Modal active={modalActive}>
                 <ModalClose
@@ -58,9 +62,8 @@ const Search = () => {
                         setModalActive(false);
                     }}
                 />
-                <ModalInput />
-                <ModalSearchIcon />
-                <ModalResultsContainer ref={node}>
+
+                <ModalResultsContainer ref={ref}>
                     {!filterCatList(catList, searchTermInput)[0] ? (
                         <ModalNoResult>No result</ModalNoResult>
                     ) : (
@@ -89,7 +92,11 @@ const Search = () => {
 
 export default Search;
 
-const Input = styled.input`
+const InputContainer = styled.div`
+    position: relative;
+`;
+
+const Input = styled.input<{ active: boolean }>`
     width: 91.62px;
     height: 30.7px;
     padding: 7px 13px;
@@ -97,12 +104,13 @@ const Input = styled.input`
     background: #ffffff;
     border: none;
     outline: none;
-    margin-top: 5px;
+    transition: 0.2s ease-in;
+    margin-top: 18px;
 
     &::placeholder {
         font-size: 12px;
         font-weight: 500;
-        color: black;
+        color: #291507;
         opacity: 1;
     }
 
@@ -114,48 +122,43 @@ const Input = styled.input`
 
         &::placeholder {
             font-size: 22px;
-            color: black;
+            color: #291507;
         }
     }
+
+    width: ${(props) => props.active && '95%'};
 `;
 
-const StyledSearchIcon = styled(SearchIcon)`
-    position: relative;
-    left: -25px;
-    top: 3px;
+const StyledSearchIcon = styled(SearchIcon)<{ active: boolean }>`
+    position: absolute;
+    top: 24px;
+    left: 65px;
     fill: black;
+    width: 18px;
+    height: 18px;
+    z-index: 1000;
+    transition: 0.2s ease-in;
 
     @media only screen and (min-width: ${MQ.large}) {
-        top: 8px;
-        left: -55px;
         width: 30px;
         height: 30px;
         fill: black;
+        top: 70px;
+        left: 350px;
     }
-`;
 
-const ModalSearchIcon = styled(StyledSearchIcon)`
-    position: relative;
-    height: 25px;
-    width: 25px;
-    left: 85%;
-    top: -4.5%;
-    fill: black;
-    pointer-events: none;
-
-    @media only screen and (min-width: ${MQ.large}) {
-        display: none;
-    }
+    opacity: ${(props) => (props.active ? '0' : '100')};
 `;
 
 const Modal = styled.div<{ active: boolean }>`
     display: ${(props) => (props.active ? 'block' : 'none')};
     position: absolute;
     z-index: 100;
-    top: 0;
-    left: 0;
+    top: 180px;
+    left: 50%;
     right: 0;
-    width: 100%;
+    width: 95%;
+    transform: translate(-50%, -0%);
     background: #ffffff;
     border-radius: 7px;
 
@@ -165,27 +168,15 @@ const Modal = styled.div<{ active: boolean }>`
         top: 85%;
         left: 9%;
         height: auto;
+        transform: translate(-0%, -0%);
     }
 `;
 
 const ModalClose = styled(CloseIcon)`
-    position: relative;
-    left: 95%;
+    position: absolute;
+    top: 5px;
+    left: 90%;
     cursor: pointer;
-
-    @media only screen and (min-width: ${MQ.large}) {
-        display: none;
-    }
-`;
-
-const ModalInput = styled.input`
-    padding: 0 20px;
-    width: 100%;
-    height: 45.51px;
-    background: #ffffff;
-    border: 1px solid #000000;
-    margin-top: 20px;
-    outline: none;
 
     @media only screen and (min-width: ${MQ.large}) {
         display: none;
@@ -233,14 +224,13 @@ const ModalNoResult = styled.div`
     text-decoration: none;
     font-weight: 500;
     font-size: 18px;
-    color: #000000;
     text-transform: capitalize;
 `;
 
 const ModalResultLink = styled(Link)`
     font-weight: 500;
     font-size: 18px;
-    color: #000000;
+    color: #291507;
     text-decoration: none;
     text-transform: capitalize;
 `;

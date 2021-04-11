@@ -11,6 +11,7 @@ const Loader = () => {
 };
 
 const LoaderContainer = styled.div`
+    margin-top: -100px;
     height: 100vh;
     width: 100%;
     display: flex;

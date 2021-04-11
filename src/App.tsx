@@ -29,11 +29,7 @@ function App() {
 
     //**Fetch the top four most visited breeds */
     useEffect(() => {
-        try {
-            dispatch(fetchTopFour());
-        } catch (err) {
-            console.log(err.message);
-        }
+        dispatch(fetchTopFour());
     }, []);
 
     //**Grab loading state to determine what to render */

@@ -49,21 +49,23 @@ const Line = styled.div`
 
 const Title = styled.h2`
     font-weight: bold;
-    font-size: 40px;
+    font-size: 35px;
     line-height: 49px;
-    color: #291507;
 `;
 
 const Body = styled.p`
     margin-top: 50px;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
 `;
 
 const ReadMore = styled.p`
     margin-top: 27px;
-    font-size: 18px;
     color: rgba(41, 21, 7, 0.6);
     font-weight: bold;
     cursor: not-allowed;
+    font-size: 12px;
 `;
 
 const Gallery = styled.div`
@@ -80,6 +82,7 @@ const Gallery = styled.div`
         grid-row: 1 /3;
         grid-column: 2;
     }
+
     img:nth-of-type(3) {
         grid-row: 2 / 3;
         justify-self: end;
@@ -92,10 +95,6 @@ const Main = styled.div`
         padding: 50px 0px;
     }
 `;
-
-// const Image = styled.div<{ image: string }>`
-//     background-image: url(${(props) => props.image});
-// `;
 
 const Image = styled.img`
     width: 100%;

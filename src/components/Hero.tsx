@@ -1,13 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { mediaQueries as MQ } from '../GlobalStyles';
+import { ReactComponent as CatwikiLogo } from '../images/CatwikiLogo.svg';
 import HeroImagelg from '../images/HeroImagelg.png';
 import HeroImagemd from '../images/HeroImagemd.png';
 import HeroImagesm from '../images/HeroImagesm.png';
 import Search from './Search';
-import { mediaQueries as MQ } from '../GlobalStyles';
-import { ReactComponent as CatwikiLogo } from '../images/CatwikiLogo.svg';
-
-export interface Props {}
 
 const Hero = () => {
     return (

@@ -1,32 +1,32 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { AppThunk, RootState } from './store';
-import { useHistory } from 'react-router';
+import { AppThunk } from './store';
 
 interface ProfileInformation {
-    profileInformation: {
-        id: string;
-        name: string;
-        description: string;
-        image: string;
-        images: string[];
-        origin: string;
-        temperament: string;
-        lifeSpan: string | null;
-        adaptability: number | null;
-        affectionLevel: number | null;
-        childFriendly: number | null;
-        grooming: number | null;
-        intelligence: number | null;
-        healthIssues: number | null;
-        socialNeeds: number | null;
-        strangerFriendly: number | null;
-    };
+    id: string;
+    name: string;
+    description: string;
+    image: string;
+    images: string[];
+    origin: string;
+    temperament: string;
+    lifeSpan: string | null;
+    adaptability: number | null;
+    affectionLevel: number | null;
+    childFriendly: number | null;
+    grooming: number | null;
+    intelligence: number | null;
+    healthIssues: number | null;
+    socialNeeds: number | null;
+    strangerFriendly: number | null;
+}
 
+interface InitialState {
+    profileInformation: ProfileInformation;
     profileLoading: boolean | null;
 }
 
-const initialState: ProfileInformation = {
+const initialState: InitialState = {
     profileInformation: {
         id: '',
         name: '',
@@ -53,14 +53,11 @@ export const profileSlice = createSlice({
     name: 'profileSlice',
     initialState,
     reducers: {
-        profileInformation: (
-            state,
-            action: PayloadAction<ProfileInformation>
-        ) => {
-            //@ts-ignore
+        profileInformation(state, action: PayloadAction<ProfileInformation>) {
             state.profileInformation = action.payload;
         },
-        profileLoading: (state, action: PayloadAction<boolean>) => {
+
+        profileLoading(state, action: PayloadAction<boolean>) {
             state.profileLoading = action.payload;
         },
     },

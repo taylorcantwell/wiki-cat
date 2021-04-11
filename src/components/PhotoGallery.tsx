@@ -4,9 +4,9 @@ import { mediaQueries as MQ } from '../GlobalStyles';
 import { useTypedSelector } from '../hooks/useTypedSelector';
 
 const PhotoGallery = () => {
-    const { profileInformation } = useTypedSelector((state) => {
-        return state.profileInformation;
-    });
+    const { profileInformation } = useTypedSelector(
+        (state) => state.profileInformation
+    );
 
     return (
         <Container>
@@ -29,12 +29,11 @@ const Container = styled.div`
 const OtherPhotoLabel = styled.p`
     font-weight: 600;
     font-size: 36px;
-    color: #291507;
 `;
 
 const PhotoContainer = styled.div`
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
     justify-items: center;
     grid-gap: 50px;
 
@@ -44,11 +43,18 @@ const PhotoContainer = styled.div`
 `;
 
 const Photo = styled.img`
-    width: 278px;
-    height: 278px;
+    max-width: 100%;
+    height: auto;
     object-fit: cover;
     border-radius: 12px;
+    transition: 0.2s ease-in;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+
     @media only screen and (min-width: ${MQ.large}) {
         max-width: 250px;
+        height: 250px;
     }
 `;

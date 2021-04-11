@@ -1,22 +1,25 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { AppThunk, RootState } from './store';
+import { AppThunk } from './store';
 
-type Visitlist = any[];
+interface InitialState {
+    list: [];
+    loadedTopBreedsList: boolean;
+}
 
 const initialState: any = {
     list: null,
-    loadedTopBreedsList: null,
+    loadedTopBreedsList: false,
 };
 
 export const visitSlice = createSlice({
     name: 'visitList',
     initialState,
     reducers: {
-        topFourBreeds: (state, action: PayloadAction<[]>) => {
+        topFourBreeds(state, action: PayloadAction<[]>) {
             state.list = action.payload;
         },
-        loadedTopBreedsList: (state, action: PayloadAction<boolean>) => {
+        loadedTopBreedsList(state, action: PayloadAction<boolean>) {
             state.loadedTopBreedsList = action.payload;
         },
     },
