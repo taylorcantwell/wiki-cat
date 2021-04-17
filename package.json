@@ -2,6 +2,9 @@
     "name": "cat-wiki",
     "version": "0.1.0",
     "private": true,
+    "engines": {
+        "node": "12.18.2"
+    },
     "dependencies": {
         "@reduxjs/toolkit": "^1.5.0",
         "@testing-library/jest-dom": "^4.2.4",
@@ -27,11 +30,9 @@
         "typescript": "^3.8.3"
     },
     "scripts": {
-        "start": "react-scripts start",
-        "build": "react-scripts build",
-        "test": "react-scripts test",
-        "eject": "react-scripts eject",
-        "server": "ts-node-dev --respawn backend/server.ts"
+        "server": "ts-node-dev --respawn backend/server.ts",
+        "start": "node dist/index.js",
+        "postinstall": "tsc"
     },
     "eslintConfig": {
         "extends": "react-app"
