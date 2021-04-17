@@ -154,6 +154,8 @@ const Title = styled.h2`
 
 const Avatar = styled.img`
     border-radius: 24px;
+    width: 100%;
+    max-height: 371.04px;
     object-fit: cover;
     @media only screen and (min-width: ${MQ.large}) {
         width: 371.04px;
