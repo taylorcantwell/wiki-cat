@@ -35,7 +35,7 @@ export const catSlice = createSlice({
 export const { catList, searchTerm, loadedSearchList } = catSlice.actions;
 
 export const fetchCatList = (): AppThunk => async (dispatch) => {
-    const { data } = await axios.get('http://localhost:4000/search/');
+    const { data } = await axios.get('https://wiki-cat.herokuapp.com/search');
     dispatch(catList(data));
     dispatch(loadedSearchList(true));
 };

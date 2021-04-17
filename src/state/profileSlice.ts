@@ -71,7 +71,9 @@ export const fetchCatProfileInformation = (
 ): AppThunk => async (dispatch) => {
     try {
         dispatch(profileLoading(true));
-        const { data } = await axios.get(`http://localhost:4000/breed/${id}`);
+        const { data } = await axios.get(
+            `https://wiki-cat.herokuapp.com/breed/${id}`
+        );
         dispatch(profileInformation(data));
         dispatch(profileLoading(false));
     } catch (err) {

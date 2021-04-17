@@ -18,7 +18,6 @@
         "@types/react-router-dom": "^5.1.7",
         "@types/styled-components": "^5.1.9",
         "axios": "^0.21.1",
-        "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "react": "^17.0.1",
         "react-dom": "^17.0.1",
@@ -30,9 +29,11 @@
         "typescript": "^3.8.3"
     },
     "scripts": {
-        "server": "ts-node-dev --respawn backend/server.ts",
-        "start": "node dist/index.js",
-        "postinstall": "tsc"
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject",
+        "server": "ts-node-dev --respawn backend/server.ts"
     },
     "eslintConfig": {
         "extends": "react-app"

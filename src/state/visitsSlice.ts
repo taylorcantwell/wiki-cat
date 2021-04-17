@@ -36,7 +36,7 @@ export default visitSlice.reducer;
 export const { topFourBreeds, loadedTopBreedsList } = visitSlice.actions;
 
 export const fetchTopFour = (): AppThunk => async (dispatch) => {
-    const { data } = await axios.get('http://localhost:4000/visits');
+    const { data } = await axios.get('https://wiki-cat.herokuapp.com/visits');
     dispatch(topFourBreeds(data));
     dispatch(loadedTopBreedsList(true));
 };
