@@ -167,6 +167,6 @@ const ImageLabel = styled.p`
 const VisitLabel = styled.p`
     font-size: 16px;
     @media only screen and (min-width: ${MQ.large}) {
-        font-size: 10px;
+        font-size: 18px;
     }
 `;
